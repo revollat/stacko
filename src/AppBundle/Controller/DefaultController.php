@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class DefaultController extends Controller
 {
@@ -37,6 +38,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/question/{id}", name="view_question")
+     * @Security("has_role('ROLE_USER')")
      * @ParamConverter("question", class="AppBundle:Question")
      */
     public function viewQuestionAction(Question $question, Request $request, ObjectManager $em)
