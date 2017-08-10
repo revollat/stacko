@@ -8,7 +8,7 @@
         <tbody>
         {% for question in pagination %}
         <tr>
-            <td>{{ question.intitule }}</td>
+            <td><a href="{{ path('view_question', { id: question.id }) }}">{{ question.intitule }}</a></td>
         </tr>
         {% endfor %}
     </table>

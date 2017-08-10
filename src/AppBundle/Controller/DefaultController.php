@@ -2,11 +2,13 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Question;
 use Doctrine\Common\Persistence\ObjectManager;
 use Knp\Component\Pager\Paginator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class DefaultController extends Controller
 {
@@ -31,6 +33,17 @@ class DefaultController extends Controller
 
         return $this->render('default/listing.html.twig', [
             'pagination' => $pagination
+        ]);
+    }
+
+    /**
+     * @Route("/question/{id}", name="view_question")
+     * @ParamConverter("question", class="AppBundle:Question")
+     */
+    public function viewQuestionAction(Question $question)
+    {
+        return $this->render('default/view_question.html.twig', [
+            'question' => $question
         ]);
     }
 }
