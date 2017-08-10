@@ -36,7 +36,11 @@ class Question
      */
     private $body;
 
-
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="questions")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
 
     /**
      * @ORM\OneToMany(targetEntity="Reponse", mappedBy="question")
@@ -138,5 +142,29 @@ class Question
     public function getIntitule()
     {
         return $this->intitule;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \AppBundle\Entity\User $user
+     *
+     * @return Question
+     */
+    public function setUser(\AppBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

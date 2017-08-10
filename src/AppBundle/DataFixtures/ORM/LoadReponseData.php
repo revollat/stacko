@@ -25,6 +25,15 @@ class LoadReponseData extends AbstractFixture implements OrderedFixtureInterface
 
                 $reponse->setBody($faker->text());
                 $reponse->setQuestion($ref_question);
+
+                $pile_face = rand(0,1);
+                if($pile_face){
+                    $user = $this->getReference('user_oliv');
+                }else{
+                    $user = $this->getReference('user_toto');
+                }
+                $reponse->setUser($user);
+
                 $manager->persist($reponse);
                 $nb_reponses--;
             }

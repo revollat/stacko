@@ -21,6 +21,14 @@ class LoadQuestionData extends AbstractFixture implements OrderedFixtureInterfac
             $question->setIntitule($faker->sentence($nbWords = 7, $variableNbWords = true));
             $question->setBody($faker->text());
 
+            $pile_face = rand(0,1);
+            if($pile_face){
+                $user = $this->getReference('user_oliv');
+            }else{
+                $user = $this->getReference('user_toto');
+            }
+            $question->setUser($user);
+
             $this->addReference('question' . $i , $question);
              
             $manager->persist($question);
