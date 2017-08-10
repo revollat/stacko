@@ -12,6 +12,11 @@
                     <b>Réponse de {{ reponse.user.username }}</b>
                     <br>
                     {{ reponse.body }}
+                    <div class="vote">
+                        <a id="vote-moins" href="{{ path ( 'reponse_vote', { id: reponse.id, vote: "▼" } ) }}" class="button tiny">-</a>
+                        <span class="success label">{{ reponse.vote }}</span>
+                        <a id="vote-plus" href="{{ path ( 'reponse_vote', { id: reponse.id, vote: "▲" } ) }}" class="button tiny">+</a>
+                    </div>
                 </td>
             </tr>
         {% endfor %}

@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
@@ -62,13 +63,31 @@ class DefaultController extends Controller
             );
 
             return $this->redirectToRoute('view_question', [
-                'id'=>$question->getId()
+                'id' => $question->getId()
             ]);
         }
 
         return $this->render('default/view_question.html.twig', [
-            'question' => $question,
-            'form' => $form->createView(),
+            'question'  => $question,
+            'form'      => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/reponse/{id}/vote/{vote}", name="reponse_vote", requirements={"vote": "▲|▼"})
+     * @Security("has_role('ROLE_USER')")
+     * @ParamConverter("reponse", class="AppBundle:Reponse")
+     */
+    public function voteAction(Reponse $reponse, $vote, ObjectManager $em)
+    {
+        $current_vote = $reponse->getVote();
+        $new_vote = $vote == "▲" ? ++$current_vote : --$current_vote ;
+        $reponse->setVote($new_vote);
+        $em->persist($reponse);
+        $em->flush();
+        return $this->redirectToRoute('view_question', [
+            'id' => $reponse->getQuestion()->getId()
+        ]);
+
     }
 }
