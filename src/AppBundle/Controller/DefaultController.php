@@ -3,6 +3,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Question;
+use AppBundle\Entity\Reponse;
+use AppBundle\Form\ReponseType;
 use Doctrine\Common\Persistence\ObjectManager;
 use Knp\Component\Pager\Paginator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -17,10 +19,7 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-        ]);
+        return $this->render('default/index.html.twig');
     }
 
     /**
@@ -40,10 +39,34 @@ class DefaultController extends Controller
      * @Route("/question/{id}", name="view_question")
      * @ParamConverter("question", class="AppBundle:Question")
      */
-    public function viewQuestionAction(Question $question)
+    public function viewQuestionAction(Question $question, Request $request, ObjectManager $em)
     {
+
+        $form = $this->createForm(ReponseType::class);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $reponse = $form->getData();
+            $reponse->setUser($this->getUser());
+            $reponse->setQuestion($question);
+            $em->persist($reponse);
+            $em->flush();
+
+            $this->addFlash(
+                'notice',
+                'Votre réponse a été ajoutée. Merci.'
+            );
+
+            return $this->redirectToRoute('view_question', [
+                'id'=>$question->getId()
+            ]);
+        }
+
         return $this->render('default/view_question.html.twig', [
-            'question' => $question
+            'question' => $question,
+            'form' => $form->createView(),
         ]);
     }
 }

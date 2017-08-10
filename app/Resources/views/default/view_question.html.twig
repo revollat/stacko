@@ -17,4 +17,9 @@
         {% endfor %}
     </table>
 
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_widget(form) }}
+    <input type="submit" value="Ajouter la réponse" />
+    {{ form_end(form) }}
+
 {% endblock %}
