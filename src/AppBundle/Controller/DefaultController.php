@@ -101,13 +101,11 @@ class DefaultController extends Controller
 
     /**
      * @Route("/question/{id}/edit", name="question_edit")
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('edit', question)")
      * @ParamConverter("question", class="AppBundle:Question")
      */
     public function questionEditAction(Question $question, ObjectManager $em, Request $request)
     {
-
-        $this->denyAccessUnlessGranted('edit', $question);
 
         $form = $this->createForm(QuestionType::class, $question);
         $form->handleRequest($request);
