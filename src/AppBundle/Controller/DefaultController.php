@@ -107,6 +107,8 @@ class DefaultController extends Controller
     public function questionEditAction(Question $question, ObjectManager $em, Request $request)
     {
 
+        $this->denyAccessUnlessGranted('edit', $question);
+
         $form = $this->createForm(QuestionType::class, $question);
         $form->handleRequest($request);
 
