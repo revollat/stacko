@@ -4,7 +4,10 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Question;
 use AppBundle\Entity\Reponse;
+use AppBundle\Form\QuestionType;
 use AppBundle\Form\ReponseType;
+use AppBundle\Service\HandleVote;
+use AppBundle\Service\VoteChecker;
 use Doctrine\Common\Persistence\ObjectManager;
 use Knp\Component\Pager\Paginator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -78,16 +81,54 @@ class DefaultController extends Controller
      * @Security("has_role('ROLE_USER')")
      * @ParamConverter("reponse", class="AppBundle:Reponse")
      */
-    public function voteAction(Reponse $reponse, $vote, ObjectManager $em)
+    public function voteAction(Reponse $reponse, $vote, HandleVote $voteHandler, VoteChecker $checker)
     {
-        $current_vote = $reponse->getVote();
-        $new_vote = $vote == "▲" ? ++$current_vote : --$current_vote ;
-        $reponse->setVote($new_vote);
-        $em->persist($reponse);
-        $em->flush();
+
+        if($checker->check($reponse, $this->getUser())){
+            $voteHandler->handle($reponse, $vote);
+        }else{
+            $this->addFlash(
+                'notice',
+                'Vous ne pouvez pas voter pour votre réponse'
+            );
+        }
+
         return $this->redirectToRoute('view_question', [
             'id' => $reponse->getQuestion()->getId()
         ]);
 
     }
+
+    /**
+     * @Route("/question/{id}/edit", name="question_edit")
+     * @Security("has_role('ROLE_USER')")
+     * @ParamConverter("question", class="AppBundle:Question")
+     */
+    public function questionEditAction(Question $question, ObjectManager $em, Request $request)
+    {
+
+        $form = $this->createForm(QuestionType::class, $question);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $em->flush();
+
+            $this->addFlash(
+                'notice',
+                'Votre question a été ajoutée. Merci.'
+            );
+
+            return $this->redirectToRoute('view_question', [
+                'id' => $question->getId()
+            ]);
+        }
+
+        return $this->render('default/edit_question.html.twig', [
+            'question'  => $question,
+            'form'      => $form->createView(),
+        ]);
+
+    }
+
 }

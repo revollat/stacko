@@ -9,6 +9,11 @@
         {% for question in pagination %}
         <tr>
             <td><a href="{{ path('view_question', { id: question.id }) }}">{{ question.intitule }}</a></td>
+            <td>
+                {% if app.user == question.user %}
+                    <a href="{{ path('question_edit', { id: question.id }) }}" class="button">Editer</a>
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </table>
