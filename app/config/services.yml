@@ -37,3 +37,7 @@ services:
 #    AppBundle\DataFixtures\ORM\LoadUserData:
 #        arguments:
 #            - '@FOS\UserBundle\Model\UserManagerInterface'
+
+    AppBundle\EventListener\NotifCreationReponseListener:
+         tags:
+             - { name: doctrine.event_listener, event: postPersist }

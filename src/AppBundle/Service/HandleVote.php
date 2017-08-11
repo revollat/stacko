@@ -8,7 +8,7 @@ class HandleVote {
 
     private $em;
 
-    public function __construct(ObjectManager $em)
+    public function __construct(ObjectManager $em, \Symfony\Bundle\FrameworkBundle\Routing\Router $router)
     {
         $this->em = $em;
     }

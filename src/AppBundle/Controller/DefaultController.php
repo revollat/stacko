@@ -131,4 +131,19 @@ class DefaultController extends Controller
 
     }
 
+
+    /**
+     * @Route("/reponse/{id}/valide", name="reponse_valid")
+     * @Security("has_role('ROLE_ADMIN')")
+     * @ParamConverter("reponse", class="AppBundle:Reponse")
+     */
+    public function valideReponseAction(Reponse $reponse, ObjectManager $em)
+    {
+        $reponse->setValide(true);
+        $em->flush();
+
+        return new Response('La réponse a bien été validée !');
+
+    }
+
 }

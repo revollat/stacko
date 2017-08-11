@@ -36,6 +36,13 @@ class Reponse
     private $vote = 0;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", options={"default":false})
+     */
+    private $valide = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Question", inversedBy="reponses")
      * @ORM\JoinColumn(name="question_id", referencedColumnName="id")
      */
@@ -151,5 +158,29 @@ class Reponse
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set valide
+     *
+     * @param boolean $valide
+     *
+     * @return Reponse
+     */
+    public function setValide($valide)
+    {
+        $this->valide = $valide;
+
+        return $this;
+    }
+
+    /**
+     * Get valide
+     *
+     * @return boolean
+     */
+    public function getValide()
+    {
+        return $this->valide;
     }
 }
